@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify, render_template, url_for, redirec
 from flask_jwt_extended import decode_token
 from datetime import datetime
 
-
 dashboard_bp = Blueprint('dashboard', __name__, template_folder='templates')
 
 

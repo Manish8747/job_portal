@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template, url_for, redirect, flash, session
+from flask import Blueprint, request, render_template, url_for, redirect, flash, session
 from flask_jwt_extended import create_access_token
 from datetime import timedelta
 from .models import db, User
@@ -35,10 +35,6 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         role = request.form.get('role')
-
-        if not email or not password or not role:
-            flash('Missing required fields', 'danger')
-            return redirect(url_for('auth.login'))
         
         user = User.query.filter_by(email=email, role=role).first()
 
