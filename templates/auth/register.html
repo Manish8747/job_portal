@@ -3,35 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Register - Job Portal</title>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-=======
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
->>>>>>> dev
 </head>
 <body>
     <h2>Register</h2>
 
-<<<<<<< HEAD
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class="flashes">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-
-    <form method="POST"">
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
-
-        <label for="role">Role:</label><br>
-=======
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
@@ -50,16 +26,11 @@
         <input type="password" id="password" name="password" required>
 
         <label for="role">Role:</label>
->>>>>>> dev
         <select id="role" name="role" required>
             <option value="">--Select Role--</option>
             <option value="Job Seeker">Job Seeker</option>
             <option value="Employer">Employer</option>
-<<<<<<< HEAD
-        </select><br><br>
-=======
         </select>
->>>>>>> dev
 
         <button type="submit">Register</button>
     </form>
