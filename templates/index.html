@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Portal</title>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7fa;
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #0056b3;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      letter-spacing: 1.2px;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: #cce0ff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .search-bar input[type="text"] {
+      padding: 12px 15px;
+      width: 70%;
+      border: 2px solid #0056b3;
+      border-radius: 4px 0 0 4px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-bar button {
+      padding: 12px 20px;
+      border: 2px solid #0056b3;
+      background-color: #0056b3;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 0 4px 4px 0;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background-color: #003d80;
+      border-color: #003d80;
+    }
+
+    .job-listings {
+      display: grid;
+      gap: 20px;
+    }
+
+    .job-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .job-card:hover {
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .job-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0056b3;
+      margin-bottom: 5px;
+    }
+
+    .company-name {
+      font-size: 1rem;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .job-location, .job-type {
+      font-size: 0.9rem;
+      color: #555;
+      margin-right: 15px;
+    }
+
+    .job-details {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    footer {
+      background-color: #0056b3;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Job Portal</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Jobs</a>
+      <a href="#">Companies</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="search-bar">
+      <input type="text" placeholder="Search for jobs, titles, or companies..." />
+      <button>Search</button>
+    </section>
+
+    <section class="job-listings">
+      <article class="job-card">
+        <div class="job-title">Frontend Developer</div>
+        <div class="company-name">Tech Solutions Inc.</div>
+        <div>
+          <span class="job-location">New York, NY</span>
+          <span class="job-type">Full-time</span>
+        </div>
+        <p class="job-details">
+          Work with React and modern web technologies to build engaging UI experiences.
+        </p>
+      </article>
+
+      <article class="job-card">
+        <div class="job-title">Backend Engineer</div>
+        <div class="company-name">DataWorks</div>
+        <div>
+          <span class="job-location">Remote</span>
+          <span class="job-type">Contract</span>
+        </div>
+        <p class="job-details">
+          Develop and maintain RESTful APIs using Python and Django REST Framework.
+        </p>
+      </article>
+
+      <article class="job-card">
+        <div class="job-title">UI/UX Designer</div>
+        <div class="company-name">Creative Minds Studio</div>
+        <div>
+          <span class="job-location">San Francisco, CA</span>
+          <span class="job-type">Part-time</span>
+        </div>
+        <p class="job-details">
+          Design intuitive and user-friendly interfaces for web and mobile applications.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Job Portal. All rights reserved.
+  </footer>
+</body>
+</html>

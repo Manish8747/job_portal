@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Configuration class for the application.
 class Config:
     """
     Base configuration class.
