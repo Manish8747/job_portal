@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Register - Job Portal</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+=======
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+>>>>>>> dev
 </head>
 <body>
     <h2>Register</h2>
 
+<<<<<<< HEAD
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul class="flashes">
@@ -26,11 +31,35 @@
         <input type="password" id="password" name="password" required><br><br>
 
         <label for="role">Role:</label><br>
+=======
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="role">Role:</label>
+>>>>>>> dev
         <select id="role" name="role" required>
             <option value="">--Select Role--</option>
             <option value="Job Seeker">Job Seeker</option>
             <option value="Employer">Employer</option>
+<<<<<<< HEAD
         </select><br><br>
+=======
+        </select>
+>>>>>>> dev
 
         <button type="submit">Register</button>
     </form>

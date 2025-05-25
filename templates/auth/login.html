@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - Job Portal</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -15,10 +16,24 @@
             <li>{{ message }}</li>
           {% endfor %}
         </ul>
+=======
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <h2>Login</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+>>>>>>> dev
       {% endif %}
     {% endwith %}
 
     <form method="POST" action="{{ url_for('auth.login') }}">
+<<<<<<< HEAD
         <label for="email">Email:</label><br>
         <input type="email" id="email" name="email" required><br><br>
 
@@ -27,6 +42,29 @@
 
         <button type="submit">Login</button>
     </form>
+=======
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required><br><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br><br>
+
+      <label>User Type:</label>
+        <div class="user-type-group">
+          <div>
+            <input type="radio" id="seeker" name="role" value="Job Seeker" required>
+            <label for="seeker">Seeker</label>
+          </div>
+          <div>
+            <input type="radio" id="employer" name="role" value="Employer" required>
+            <label for="employer">Employer</label>
+          </div>
+        </div>
+
+      <button type="submit">Login</button>
+  </form>
+
+>>>>>>> dev
 
     <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
 </body>
