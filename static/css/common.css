@@ -1,3 +1,4 @@
+/* Global Styling */
 body {
   background-color: #f4f7fa;
   color: #333;
@@ -19,6 +20,7 @@ h2 {
   text-align: center;
 }
 
+/* Flash Messages */
 .flash-message {
   padding: 10px 15px;
   margin-bottom: 15px;
@@ -29,27 +31,25 @@ h2 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Success */
 .flash-message.success {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
 }
 
-/* Warning */
 .flash-message.warning {
   background-color: #fff3cd;
   color: #856404;
   border: 1px solid #ffeeba;
 }
 
-/* Danger */
 .flash-message.danger {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
 
+/* Form Styling */
 form {
   background-color: white;
   padding: 20px 25px;
@@ -64,13 +64,12 @@ form label {
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #333;
   font-size: 0.95rem;
 }
 
-form input[type="email"],
-form input[type="password"],
-form select {
+form input,
+form select,
+form textarea {
   width: 100%;
   padding: 8px 1px;
   margin-bottom: 12px;
@@ -81,10 +80,29 @@ form select {
   transition: border-color 0.3s ease;
 }
 
-form input[type="email"]:focus,
-form input[type="password"]:focus,
-form select:focus {
+form input:focus,
+form select:focus,
+form textarea:focus {
   border-color: #003d80;
+}
+
+.user-type-group {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.user-type-group input[type="radio"] {
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.user-type-group label {
+  font-weight: normal;
+  color: #555;
+  cursor: pointer;
 }
 
 form button {
@@ -125,7 +143,7 @@ p a:hover {
   color: #003d80;
 }
 
-/* Responsive tweaks */
+/* Responsive */
 @media (max-height: 600px) {
   body {
     padding: 15px 10px;

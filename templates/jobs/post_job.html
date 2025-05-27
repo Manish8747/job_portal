@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{% if job %}Edit Job{% else %}Post a New Job{% endif %}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/post_job.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="top-right-button">
+    <a href="{{ url_for('dashboard.employer_dashboard') }}">Back to Dashboard</a>
+  </div>
+
+  <h2>{% if job %}Edit Job{% else %}Post a New Job{% endif %}</h2>
+
+  <form method="POST">
+    <label for="title">Job Title</label>
+    <input type="text" name="title" value="{{ job.title if job else '' }}" required>
+
+    <label for="description">Description</label>
+    <textarea name="description" rows="4" required>{{ job.description if job else '' }}</textarea>
+
+    <label for="location">Location</label>
+    <input type="text" name="location" value="{{ job.location if job else '' }}" required>
+
+    <label for="job_type">Job Type</label>
+    <select name="job_type" id="job_type" required onchange="updateSalaryUnit()">
+      <option value="Full-time" {% if job and job.job_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+      <option value="Part-time" {% if job and job.job_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+      <option value="Internship" {% if job and job.job_type == 'Internship' %}selected{% endif %}>Internship</option>
+    </select>
+
+    <label for="salary">Salary in ₹<span id="salary-unit">(per annum)</span></label>
+    <input type="number" step="0.01" name="salary" id="salary" value="{{ job.salary if job else '' }}" required>
+
+    <script>
+      function updateSalaryUnit() {
+        const jobType = document.getElementById('job_type').value;
+        const salaryUnit = document.getElementById('salary-unit');
+
+        if (jobType === 'Full-time') {
+          salaryUnit.textContent = '(per annum)';
+        } else if (jobType === 'Part-time') {
+          salaryUnit.textContent = '(per hour)';
+        } else if (jobType === 'Internship') {
+          salaryUnit.textContent = '(per month)';
+        }
+      }
+
+      window.onload = updateSalaryUnit;
+    </script>
+
+    <button type="submit">{% if job %}Update Job{% else %}Post Job{% endif %}</button>
+  </form>
+{% endblock %}

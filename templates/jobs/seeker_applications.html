@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Your Applications{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="top-right-button">
+    <a href="{{ url_for('dashboard.seeker_dashboard') }}">Back to Dashboard</a>
+  </div>
+  <h2>Your Applied Jobs</h2>
+
+  <div class="application-list">
+    {% if applications %}
+      {% for app in applications %}
+        <div class="application-card">
+          <h4>{{ app.job.title }}</h4>
+          <p><strong>Location:</strong> {{ app.job.location }}</p>
+          <p><strong>Type:</strong> {{ app.job.job_type }}</p>
+          <p><strong>Salary:</strong> ₹{{ app.job.salary }}</p>
+
+          <form method="POST" action="{{ url_for('job.delete_application', app_id=app.id) }}">
+            <button type="submit" style="margin-top: 10px; padding: 8px 12px; background-color: #dc3545; border: none; color: white; border-radius: 4px; cursor: pointer;">
+              Delete Application
+            </button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-applications">You haven't applied to any jobs yet.</div>
+    {% endif %}
+  </div>
+
+{% endblock %}

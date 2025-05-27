@@ -14,6 +14,7 @@ def register():
         password = request.form.get('password')
         role = request.form.get('role')
 
+        # user existence check
         if User.query.filter_by(email=email).first():
             flash('User already exists', 'danger')
             return render_template('auth/register.html')
@@ -28,6 +29,7 @@ def register():
 
     return render_template('auth/register.html')
 
+
 #Function to Login Employer or Seeker
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -40,10 +42,11 @@ def login():
 
         if user and user.check_password(password):
             # Create a JWT access token
-            access_token = create_access_token(identity={'id': user.id, 'role': user.role}, expires_delta=timedelta(hours=1))
+            uid = str(user.id)
+            access_token = create_access_token(identity=uid, additional_claims={'role': user.role}, expires_delta=timedelta(hours=1))
             # Store token in session(CLient-Side Storage)
             session['access_token'] = access_token
-
+            #role based redirection
             if role == "Employer":
                 return redirect(url_for('dashboard.employer_dashboard'))
             else:
@@ -53,6 +56,7 @@ def login():
             return render_template('auth/login.html')
         
     return render_template('auth/login.html')
+
 
 # Function to logout Employer or Seeker
 @auth_bp.route('/logout')

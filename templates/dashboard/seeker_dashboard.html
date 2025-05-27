@@ -1,16 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seeker Dashboard</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Seeker Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
     <h1>Welcome to Seeker Dashboard</h1>
 
-    <form action="{{ url_for('auth.logout') }}" method="get">
+    <div class="dashboard-actions">
+      <a href="{{ url_for('job.my_applications') }}">🎯 My Applications</a>
+      <form action="{{ url_for('auth.logout') }}" method="get">
         <button type="submit">Logout</button>
-    </form>
-</body>
-</html>
+      </form>
+    </div>
 
+    <hr style="margin: 40px 0;">
+
+    <h2 style="text-align: center; color: #0056b3;">Available Jobs</h2>
+
+    <div class="job-list" style="max-width: 800px; margin: 0 auto;">
+      {% if jobs %}
+        {% for job in jobs %}
+          <div class="job-card" style="background-color: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <h4 style="margin: 0 0 10px; color: #0056b3;">{{ job.title }}</h4>
+            <p><strong>Company:</strong> {{ job.poster.email }}</p>
+            <p><strong>Location:</strong> {{ job.location }}</p>
+            <p><strong>Type:</strong> {{ job.job_type }}</p>
+            <p><strong>Salary:</strong> ₹{{ job.salary }}</p>
+
+            <form method="POST" action="{{ url_for('job.apply_to_job', job_id=job.id) }}" enctype="multipart/form-data">
+              <div style="margin-top: 10px;">
+                <label for="cover_letter_{{ job.id }}">Cover Letter:</label><br>
+                <textarea name="cover_letter" id="cover_letter_{{ job.id }}" rows="3" required style="width: 100%; margin-bottom: 10px;"></textarea>
+
+                <label for="resume_{{ job.id }}">Upload Resume (PDF only):</label>
+                <input type="file" name="resume" id="resume_{{ job.id }}" accept=".pdf" required><br><br>
+
+                <button type="submit" style="padding: 10px; background-color: #0056b3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                  Apply for this Job
+                </button>
+              </div>
+            </form>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p style="text-align: center;">No jobs currently available.</p>
+      {% endif %}
+    </div>
+{% endblock %}

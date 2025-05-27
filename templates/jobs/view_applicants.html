@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Applicants for {{ job.title }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+{% block content %}
+  <h2>Applicants for "{{ job.title }}"</h2>
+  <div class="top-right-button">
+    <a href="{{ url_for('job.my_posted_jobs') }}">Back to My Jobs</a>
+  </div>
+
+  {% if applications %}
+    <ul style="list-style-type:none; padding:0;">
+      {% for app in applications %}
+        <li style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+          <p><strong>Applicant:</strong> {{ app.seeker.email }}</p>
+          <p><strong>Cover Letter:</strong> {{ app.cover_letter }}</p>
+
+          {% if app.resume_path %}
+            <p><a href="{{ url_for('static', filename=app.resume_path) }}" target="_blank">View Resume</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No applications yet.</p>
+  {% endif %}
+{% endblock %}
