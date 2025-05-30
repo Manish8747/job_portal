@@ -19,7 +19,9 @@
           <h4>{{ app.job.title }}</h4>
           <p><strong>Location:</strong> {{ app.job.location }}</p>
           <p><strong>Type:</strong> {{ app.job.job_type }}</p>
+          <p><strong>Cover Letter:</strong> {{ app.cover_letter }}</p>
           <p><strong>Salary:</strong> ₹{{ app.job.salary }}</p>
+          <p><strong>Status:</strong> {{ app.status }}</p>
 
           <form method="POST" action="{{ url_for('job.delete_application', app_id=app.id) }}">
             <button type="submit" style="margin-top: 10px; padding: 8px 12px; background-color: #dc3545; border: none; color: white; border-radius: 4px; cursor: pointer;">

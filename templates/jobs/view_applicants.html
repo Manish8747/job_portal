@@ -2,6 +2,26 @@
 {% block title %}Applicants for {{ job.title }}{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+  form.status-form {
+    margin-top: 10px;
+  }
+  form.status-form select {
+    padding: 4px 8px;
+    margin-right: 8px;
+  }
+  form.status-form button {
+    padding: 4px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  form.status-form button:hover {
+    background-color: #218838;
+  }
+</style>
 {% endblock %}
 {% block content %}
   <h2>Applicants for "{{ job.title }}"</h2>
@@ -17,8 +37,22 @@
           <p><strong>Cover Letter:</strong> {{ app.cover_letter }}</p>
 
           {% if app.resume_path %}
-            <p><a href="{{ url_for('static', filename=app.resume_path) }}" target="_blank">View Resume</a>
+            <p><a href="{{ url_for('static', filename=app.resume_path) }}" target="_blank">View Resume</a></p>
           {% endif %}
+
+          <p><strong>Status:</strong> {{ app.status }}</p>
+
+          <form class="status-form" method="POST" action="{{ url_for('job.update_status', app_id=app.id) }}">
+            <label for="status-{{ app.id }}">Update Status:</label>
+            <select id="status-{{ app.id }}" name="status" required>
+              <option value="" disabled selected>Choose status</option>
+              <option value="Pending" {% if app.status == 'Pending' %}selected{% endif %}>Pending</option>
+              <option value="Reviewed" {% if app.status == 'Reviewed' %}selected{% endif %}>Reviewed</option>
+              <option value="Accepted" {% if app.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+              <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+            <button type="submit">Update</button>
+          </form>
         </li>
       {% endfor %}
     </ul>

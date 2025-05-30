@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Portal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7fa;
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #0056b3;
+      color: #fff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      color: #cce0ff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .top-right-auth a {
+      color: #cce0ff;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: 600;
+    }
+
+    .top-right-auth a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    section {
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    footer {
+      background-color: #0056b3;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="#" onclick="showSection('home')">Home</a>
+      <a href="#" onclick="showSection('about')">About</a>
+      <a href="#" onclick="showSection('contact')">Contact</a>
+    </nav>
+    <div class="top-right-auth"> 
+      <a href="{{ url_for('auth.login') }}">Login</a>
+      <a href="{{ url_for('auth.register') }}">Register</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="active">
+      <h2>Welcome to Job Portal</h2>
+      <p>Find your dream job or the perfect candidate with ease.</p>
+    </section>
+
+    <section id="about">
+      <h2>About Us</h2>
+      <p>
+        Welcome to the Job Portal! We connect job seekers with employers across multiple industries. Whether you’re a fresher or an experienced professional, our platform helps you find the right opportunity. Employers can easily post jobs, manage applications, and find their perfect candidates here.
+      </p>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <p>Email: support@jobportal.com</p>
+      <p>Phone: +1 234 567 890</p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Job Portal. All rights reserved.
+  </footer>
+
+  <script>
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll("main section");
+      sections.forEach((sec) => sec.classList.remove("active"));
+      document.getElementById(sectionId).classList.add("active");
+    }
+  </script>
+</body>
+</html>

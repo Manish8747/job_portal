@@ -10,6 +10,7 @@ auth_bp = Blueprint('auth', __name__, template_folder='templates')
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
         role = request.form.get('role')
@@ -20,10 +21,11 @@ def register():
             return render_template('auth/register.html')
 
 
-        new_user = User(email=email, role=role)
+        new_user = User(name=name, email=email, role=role)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
+        
         flash("Registration successful. Please log in.", "success")
         return redirect(url_for('auth.login'))
 

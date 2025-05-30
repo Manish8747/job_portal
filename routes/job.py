@@ -4,6 +4,10 @@ from .models import db, User, Job, Application
 import os
 from werkzeug.utils import secure_filename
 from sqlalchemy import func
+from datetime import datetime
+from flask_mail import Message
+from routes.email import send_application_confirmation_email, send_status_update_email
+
 
 job_bp = Blueprint('job', __name__, template_folder='templates')
 
@@ -22,8 +26,6 @@ def get_current_user():
             decoded = decode_token(token)
             user_id = decoded.get('sub')
             user_role = decoded.get('role')
-            print("[TOKEN DECODED]", decoded)
-            print("[USER ID]", user_id, "[USER ROLE]", user_role)
             user = User.query.get(user_id)
 
             if user and user.role == user_role:
@@ -129,24 +131,6 @@ def view_applicants(job_id):
     return render_template('jobs/view_applicants.html', job=job, applications=applications)
 
 
-
-# Show My Posted Jobs
-@job_bp.route('/my-jobs')
-def my_jobs():
-    user = get_current_user()
-    if not user:
-        flash("Login required to view jobs.", "danger")
-        return redirect(url_for('auth.login'))
-    
-    if user.role != 'Employer':
-        flash("Access denied. Only Employers can view their jobs.", "danger")
-        return redirect(url_for('dashboard.seeker_dashboard'))
-
-    jobs = Job.query.filter_by(posted_by=user.id).all()
-    return render_template('jobs/list_jobs.html', jobs=jobs)
-
-
-
 # Delete Job
 @job_bp.route('/delete-job/<int:job_id>', methods=['POST'])
 def delete_job(job_id):
@@ -169,6 +153,35 @@ def delete_job(job_id):
     flash("Job deleted successfully!", "success")
     return redirect(url_for('job.my_jobs'))
 
+@job_bp.route('/application/<int:app_id>/status', methods=['POST'])
+def update_status(app_id):
+    user = get_current_user()
+    
+    # Check if user is logged in
+    if not user:
+        flash('Please log in to perform this action.', 'danger')
+        return redirect(url_for('auth.login'))
+
+    application = Application.query.get_or_404(app_id)
+
+    # Only the job poster can update the application status
+    if user.id != application.job.posted_by:
+        abort(403)
+
+    new_status = request.form.get('status')
+    if new_status:
+        application.status = new_status
+        db.session.commit()
+        send_status_update_email(
+            user_email=application.seeker.email,
+            candidate_name=application.seeker.name,
+            job_title=application.job.title,
+            new_status=application.status
+        )
+
+        flash('Application status updated. Sent mail to applicant', 'success')
+
+    return redirect(url_for('job.view_applicants', job_id=application.job.id))
 
 # Edit Job
 @job_bp.route('/edit-job/<int:job_id>', methods=['GET', 'POST'])
@@ -223,51 +236,66 @@ def my_applications():
     applications = Application.query.filter_by(seeker_id=user.id).all()
     return render_template('jobs/seeker_applications.html', applications=applications)
 
-# List all jobs for seekers posted by all Employers
-@job_bp.route('/jobs')
-def list_all_jobs():
-    user = get_current_user()
-    jobs = Job.query.all()
-    return render_template('jobs/seeker_job_list.html', jobs=jobs, user=user)
-
 
 # Apply to a job with cover letter and resume
 @job_bp.route('/apply/<int:job_id>', methods=['POST'])
 def apply_to_job(job_id):
+    job = Job.query.get_or_404(job_id)
     user = get_current_user()
-    if not user or user.role != 'Job Seeker':
-        flash("Only seekers can apply to jobs.", "danger")
+
+    # Ensure user is logged in
+    if not user:
+        flash('Please log in to apply for jobs.', 'danger')
         return redirect(url_for('auth.login'))
 
-    job = Job.query.get_or_404(job_id)
+    # Ensure user is a seeker
+    if user.role != 'Job Seeker':
+        flash("Access denied. Only job seekers can access this page.", "danger")
+        return redirect(url_for('job.post_job'))  # or any employer route
 
-    cover_letter = request.form.get('cover_letter')
-    resume = request.files.get('resume')
-
-    if not cover_letter or not resume or not allowed_file(resume.filename):
-        flash("Invalid input. Please provide a cover letter and PDF resume.", "warning")
+    # Prevent duplicate applications
+    existing_application = Application.query.filter_by(job_id=job_id, seeker_id=user.id).first()
+    if existing_application:
+        flash('You have already applied for this job.', 'warning')
         return redirect(url_for('dashboard.seeker_dashboard'))
 
-    # Save resume
-    filename = secure_filename(resume.filename)
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    save_path = os.path.join(UPLOAD_FOLDER, filename)
-    resume.save(save_path)
 
-    # Save relative path for database (use forward slashes for URLs)
-    # Remove 'static/' prefix because url_for('static') already points to it
-    relative_path = os.path.join('uploads', filename).replace('\\', '/')
+    # Get cover letter from form
+    cover_letter = request.form.get('cover_letter')
+    file = request.files['resume']
 
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        save_path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(save_path)
+        relative_path = os.path.join('uploads', filename).replace('\\', '/')
+    else:
+        flash('Invalid file type. Allowed: pdf', 'danger')
+        return redirect(url_for('dashboard.seeker_dashboard'))
+
+
+    # Create a new application
     application = Application(
         job_id=job.id,
         seeker_id=user.id,
+        application_date=datetime.utcnow(),
+        status='Pending',
         cover_letter=cover_letter,
-        resume_path=relative_path  # store relative path only
+        resume_path=relative_path
     )
     db.session.add(application)
     db.session.commit()
 
-    flash("Application submitted successfully!", "success")
+    # Send confirmation email to the seeker
+    send_application_confirmation_email(
+        user_email=user.email,
+        candidate_name=user.name,
+        job_title=job.title,
+        company_name=job.poster.name
+    )
+
+    flash('Application submitted successfully.', 'success')
     return redirect(url_for('dashboard.seeker_dashboard'))
 
 # Delete Application
@@ -290,3 +318,24 @@ def delete_application(app_id):
 
     flash("Application deleted successfully.", "success")
     return redirect(url_for('job.my_applications'))
+
+
+# Show My Posted Jobs
+@job_bp.route('/my-jobs')
+def my_jobs():
+    user = get_current_user()
+    if not user:
+        flash("Login required to view jobs.", "danger")
+        return redirect(url_for('auth.login'))
+    
+    if user.role != 'Employer':
+        flash("Access denied. Only Employers can view their jobs.", "danger")
+        return redirect(url_for('dashboard.seeker_dashboard'))
+
+    jobs = Job.query.filter_by(posted_by=user.id).all()
+    return render_template('jobs/list_all_jobs.html', jobs=jobs)
+
+
+
+
+

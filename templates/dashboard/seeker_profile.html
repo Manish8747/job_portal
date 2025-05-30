@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Seeker Profile{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #f4f7fa;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    padding: 30px 15px;
+    margin: 0;
+    /* Remove flexbox centering */
+    display: block !important;
+  }
+
+  .profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .top-right-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .top-right-button a {
+    text-decoration: none;
+    background-color: #3498db;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .top-right-button a:hover {
+    background-color: #2980b9;
+  }
+
+  h2 {
+    color: #0056b3;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  p {
+    margin: 6px 0;
+    font-size: 1rem;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  ul li {
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="profile-container">
+  <div class="top-right-button">
+    <a href="{{ url_for('dashboard.seeker_dashboard') }}">Back to Dashboard</a>
+  </div>
+
+  <h2>My Profile</h2>
+
+  <p><strong>Full Name:</strong> {{ user.name }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Role:</strong> {{ user.role }}</p>
+
+  <!-- Uncomment and implement these if you add experience and resume support -->
+  <!--
+  <p><strong>Experience:</strong> {{ user.experience or 'Not provided' }}</p>
+
+  <p><strong>Resume:</strong>
+    {% if user.resume %}
+      <a href="{{ url_for('static', filename=user.resume) }}" target="_blank">View Resume</a>
+    {% else %}
+      No resume uploaded.
+    {% endif %}
+  </p>
+
+  <h3>Upload / Update Resume</h3>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="resume" accept=".pdf,.txt" required>
+    <button type="submit">Upload</button>
+  </form>
+  -->
+
+  <hr>
+
+  <h3>My Applications</h3>
+  {% if applied_jobs %}
+    <ul>
+      {% for app in applied_jobs %}
+        <li>
+          <strong>{{ app.job_title }}</strong> at <em>{{ app.company_name }}</em> — Status: {{ app.status }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have not applied for any jobs yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

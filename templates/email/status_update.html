@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <p>Dear {{ candidate_name }},</p>
+
+  <p>The status of your application for <strong>{{ job_title }}</strong> at <strong>{{ company_name }}</strong> has been updated to: <strong>{{ new_status }}</strong>.</p>
+
+  <p>Wait for further Instructions.</p>
+
+  <p>Regards,<br>Job Portal Team</p>
+</body>
+</html>
