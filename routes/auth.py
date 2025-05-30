@@ -6,6 +6,8 @@ from .models import db, User
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 
+
+
 # Function to register Employer or Seeker
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
